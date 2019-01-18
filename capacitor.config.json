@@ -1,0 +1,6 @@
+{
+  "appId": "com.leave.app",
+  "appName": "leave",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

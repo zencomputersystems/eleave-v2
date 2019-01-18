@@ -12,8 +12,12 @@ const routes: Routes = [
     loadChildren: './home/home.module#HomePageModule'
   },
   {
-    path: 'list',
-    loadChildren: './list/list.module#ListPageModule'
+    path: 'leave-type-setup',
+    loadChildren: '../pages/admin/leave-type-setup/leave-type-setup.module#LeaveTypeSetupPageModule'
+  },
+  {
+    path: 'leave-type-edit',
+    loadChildren: '../pages/admin/leave-type-setup/form/leave-type-setup-form.module#LeaveTypeSetupFormModule'
   }
 ];
 
