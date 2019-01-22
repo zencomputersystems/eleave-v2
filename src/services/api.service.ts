@@ -10,7 +10,12 @@ import { map} from 'rxjs/operators';
   })
 export class APIService {
 
-    constructor(public http: Http) { }
+    queryHeaders = new Headers();
+
+    constructor(public http: Http) {
+        this.queryHeaders.append('Content-Type', 'application/json');
+        this.queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
+    }
 
     private handleError(error: any) {
         const errMsg = (error.message) ? error.message :
@@ -28,17 +33,11 @@ export class APIService {
 
     getApiModel(endPoint: string, args?: string) {
         const url = this.getModelUrl(endPoint, args);
-        const queryHeaders = new Headers();
-        queryHeaders.append('Content-Type', 'application/json');
-        queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
-        return this.http.get(url, { headers: queryHeaders }).pipe(map(res => res.json()));
+        return this.http.get(url, { headers: this.queryHeaders }).pipe(map(res => res.json()));
     }
 
     save(Model_Name: any, Table_Name: string): Observable<any> {
-        const queryHeaders = new Headers();
-        queryHeaders.append('Content-Type', 'application/json');
-        queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
-        const options = new RequestOptions({ headers: queryHeaders });
+        const options = new RequestOptions({ headers: this.queryHeaders });
         return this.http.post(constants.DREAMFACTORY_TABLE_URL + '/' + Table_Name, Model_Name, options)
         .pipe(map((response) => {
                 return response;
@@ -46,10 +45,7 @@ export class APIService {
     }
 
     update(Model_Name: any, Table_Name: string): Observable<any> {
-        const queryHeaders = new Headers();
-        queryHeaders.append('Content-Type', 'application/json');
-        queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
-        const options = new RequestOptions({ headers: queryHeaders });
+        const options = new RequestOptions({ headers: this.queryHeaders });
         return this.http.patch(constants.DREAMFACTORY_TABLE_URL + '/' + Table_Name, Model_Name, options)
             .pipe(map((response) => {
                 return response;
