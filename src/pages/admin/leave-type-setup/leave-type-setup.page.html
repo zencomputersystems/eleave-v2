@@ -16,7 +16,7 @@
         <div *ngFor="let item of leaves">
           <div class="leave-table" style="margin-bottom:5em;">
             <p>{{item.leave_type}}</p>
-            
+             <a [routerLink]="['/leave-type-edit',{lid:item.leave_id}]">Add</a>
             <table mat-table [dataSource]="item.leave_entitlement" class="mat-elevation-z8">
 
               <ng-container matColumnDef="LEAVE_ENTITLEMENT_CODE">

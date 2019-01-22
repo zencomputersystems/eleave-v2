@@ -4,7 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { APIService } from './api.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LoadingController } from '@ionic/angular';
-import { load } from '@angular/core/src/render3';
+import { LeaveTypeEntitlementModel } from 'src/models/leavetype-entitlement.model';
+import { XmlJson } from './xml-json.service';
+import { UUID } from 'angular2-uuid';
 
 const convert = require('xmljson');
 
@@ -15,15 +17,20 @@ export class LeaveTypeFormService {
 
   public form: FormGroup;
   public formArray: FormArray;
+  public entitlementdata = new LeaveTypeEntitlementModel;
 
   private _formData: BehaviorSubject<any> = new BehaviorSubject([]);
   public readonly formData: Observable<any> = this._formData.asObservable();
 
-  constructor(private _fb: FormBuilder, private _apiService: APIService, public loadingCtrl: LoadingController) {
+  constructor(
+    private _fb: FormBuilder,
+    private _apiService: APIService,
+    public loadingCtrl: LoadingController,
+    private _jsonXml: XmlJson) {
 
     // form definition
     this.form = this._fb.group({
-      leaveType: ['Annual Leave', Validators.required],
+      leaveType: ['', Validators.required],
       name: [null, Validators.required],
       description: [null, Validators.required],
       properties: this._fb.group({
@@ -66,6 +73,8 @@ export class LeaveTypeFormService {
     });
   }
 
+  //#region EDIT MODE METHOD
+
   // load the data for edit mode
   public async loadDataForEdit(id: string) {
 
@@ -79,7 +88,6 @@ export class LeaveTypeFormService {
         .subscribe(data => {
             this._formData.next(data[0]);
 
-            console.log(data[0]);
             let xmltojson: any;
 
             // convert the xml into json
@@ -132,45 +140,75 @@ export class LeaveTypeFormService {
             );
   }
 
+  public updateLeaveEntitlementType() {
+
+    return this.formData
+        .pipe(
+            map(data => {
+                const currentTimeStamp = new Date().toISOString();
+
+                // update the timestamp
+                data.UPDATE_TS = currentTimeStamp;
+
+                data.DESCRIPTION = this.form.value.description;
+                data.CODE = this.form.value.name;
+
+                // convert the json data to xml
+                data.PROPERTIES_XML = this._jsonXml.JsonToXml(this.form.value);
+
+                return JSON.stringify({ resource: [data] });
+
+            })
+        ).pipe(switchMap((data) => {
+
+            return this._apiService.update(data, 'l_leavetype_entitlement_def');
+        })
+        );
+  }
+
+  //#endregion
+
+  //#region ADD MODE METHOD
+
+  public loadDataForAdd(leaveid: string) {
+
+    this._apiService.getApiModel('l_main_leavetype', 'filter=ACTIVE_FLAG=1&&filter=LEAVE_TYPE_GUID=' + leaveid)
+      .subscribe(data => {
+
+        const res = data['resource'][0];
+
+        this.entitlementdata.TENANT_GUID = res.TENANT_GUID;
+        this.entitlementdata.TENANT_COMPANY_GUID = res.TENANT_COMPANY_GUID;
+        this.entitlementdata.CREATION_USER_GUID = res.CREATION_USER_GUID;
+
+        this.form.patchValue({
+          leaveType : res.CODE
+        });
+      });
+  }
+
   // save leave configuration
-  public saveLeaveType() {
+  public saveLeaveEntitlementType(leaveid: string) {
 
+    this.entitlementdata.ENTITLEMENT_GUID = UUID.UUID();
+    this.entitlementdata.ACTIVE_FLAG = 1;
+    this.entitlementdata.LEAVE_TYPE_GUID = leaveid;
+    this.entitlementdata.CODE = this.form.value.name;
+    this.entitlementdata.DESCRIPTION = this.form.value.description;
+    this.entitlementdata.CREATION_TS = new Date().toISOString();
+    this.entitlementdata.PROPERTIES_XML = this._jsonXml.JsonToXml(this.form.value);
+
+    const saveData = JSON.stringify({resource: [this.entitlementdata]});
+
+    return this._apiService.save(saveData, 'l_leavetype_entitlement_def');
   }
 
-  public updateLeaveType() {
+  //#endregion
 
-      return this.formData
-          .pipe(
-              map(data => {
-                  const currentTimeStamp = new Date().toISOString();
-
-                  // update the timestamp
-                  data.UPDATE_TS = currentTimeStamp;
-
-                  data.DESCRIPTION = this.form.value.description;
-                  data.CODE = this.form.value.name;
-
-                  // convert the json data to xml
-                  let jsonToXml: any;
-
-                  convert.to_xml(JSON.stringify(this.form.value), function (error, t) {
-                      jsonToXml = t;
-                  });
-
-                  data.PROPERTIES_XML = jsonToXml;
-
-                  return JSON.stringify({ resource: [data] });
-
-              })
-          ).pipe(switchMap((data) => {
-
-              return this._apiService.update(data, 'l_leavetype_entitlement_def');
-          })
-          );
-  }
 
   public removeLeaveType() {
 
   }
+
 
 }

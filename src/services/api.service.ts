@@ -39,7 +39,7 @@ export class APIService {
         queryHeaders.append('Content-Type', 'application/json');
         queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
         const options = new RequestOptions({ headers: queryHeaders });
-        return this.http.post(constants.DREAMFACTORY_TABLE_URL + '/' + Table_Name, Model_Name.toJson(true), options)
+        return this.http.post(constants.DREAMFACTORY_TABLE_URL + '/' + Table_Name, Model_Name, options)
         .pipe(map((response) => {
                 return response;
             }));

@@ -17,6 +17,7 @@ export class LeaveTypeSetupForm implements OnInit {
     jsonData: any;
     editMode = false;
     subscription: Subscription;
+    leaveid: string;
 
     get form(): FormGroup {
         return this._leaveTypeFormService.form;
@@ -33,6 +34,7 @@ export class LeaveTypeSetupForm implements OnInit {
 
     ionViewWillEnter() {
         const id = this._activatedRouter.snapshot.paramMap.get('id');
+        this.leaveid = this._activatedRouter.snapshot.paramMap.get('lid');
 
         // check if we in edit or add mode
         if (id != null && id !== '') {
@@ -41,6 +43,9 @@ export class LeaveTypeSetupForm implements OnInit {
 
             // load the data from db
             this._leaveTypeFormService.loadDataForEdit(id);
+
+        } else {
+            this._leaveTypeFormService.loadDataForAdd(this.leaveid);
         }
 
     }
@@ -49,10 +54,10 @@ export class LeaveTypeSetupForm implements OnInit {
         let data: any;
         if (this.editMode) {
             // call the update method
-            data = this._leaveTypeFormService.updateLeaveType();
+            data = this._leaveTypeFormService.updateLeaveEntitlementType();
         } else {
             // call the insert method
-            data = this._leaveTypeFormService.saveLeaveType();
+            data = this._leaveTypeFormService.saveLeaveEntitlementType(this.leaveid);
         }
 
         // tslint:disable-next-line:no-shadowed-variable
