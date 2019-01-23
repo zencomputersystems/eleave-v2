@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { APIService } from './api.service';
 import { map, switchMap } from 'rxjs/operators';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController} from '@ionic/angular';
 import { LeaveTypeEntitlementModel } from 'src/models/leavetype-entitlement.model';
 import { XmlJson } from './xml-json.service';
 import { UUID } from 'angular2-uuid';
@@ -204,11 +204,5 @@ export class LeaveTypeFormService {
   }
 
   //#endregion
-
-
-  public removeLeaveType() {
-
-  }
-
 
 }
