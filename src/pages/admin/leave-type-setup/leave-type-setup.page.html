@@ -11,8 +11,9 @@
 
 
 <ion-content padding>
+
     <div class="example-container">
-        <div *ngFor="let item of leaves | async">
+        <div *ngFor="let item of leaves">
           <div class="leave-table" style="margin-bottom:5em;">
             <p>{{item.leave_type}}</p>
              <a [routerLink]="['/leave-type-edit',{lid:item.leave_id}]">Add</a>
@@ -25,17 +26,7 @@
 
               <ng-container matColumnDef="Edit">
                 <th mat-header-cell *matHeaderCellDef> Option </th>
-                <td style="width:10%;" mat-cell *matCellDef="let element">
-                  <ion-row>
-                    <ion-item [routerLink]="['/leave-type-edit',{id:element.ENTITLEMENT_GUID}]">
-                      <ion-icon name="md-clipboard"></ion-icon>
-                    </ion-item>
-
-                    <ion-item (click)='onDeleteLeave(item.leave_id,element.ENTITLEMENT_GUID)'>
-                      <ion-icon color=danger name="md-trash"></ion-icon>
-                    </ion-item>
-                  </ion-row>
-                </td>
+                <td style="width:10%;" mat-cell *matCellDef="let element"><ion-item [routerLink]="['/leave-type-edit',{id:element.ENTITLEMENT_GUID}]"><ion-icon name="md-clipboard"></ion-icon></ion-item></td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

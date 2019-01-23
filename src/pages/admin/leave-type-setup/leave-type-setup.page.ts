@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LeaveTypeService } from 'src/services/leave-type.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-leave-type-setup',
@@ -10,24 +11,23 @@ import { LeaveTypeService } from 'src/services/leave-type.service';
 export class LeaveTypeSetupPage implements OnInit {
 
   leaves: any;
+  subscription: Subscription;
 
   displayedColumns: string[] = ['LEAVE_ENTITLEMENT_CODE', 'Edit'];
 
-  constructor(
-    private _data: LeaveTypeService) { }
+  constructor(private _data: LeaveTypeService) { }
 
   ngOnInit() {}
 
   ionViewWillEnter() {
-    this._data.getLeaveTypeData()
-          .subscribe(() => {
-            this.leaves = this._data.leaveData;
-        });
+    this.subscription = this._data.getLeaveTypeData()
+                          .subscribe(data => {
+                            this.leaves = data;
+                        });
   }
 
-
-  onDeleteLeave(leaveid: string, entitlementid: string) {
-    this._data.removeLeaveType(leaveid, entitlementid);
+  ionViewDidLeave() {
+    this.subscription.unsubscribe();
   }
 
 }
