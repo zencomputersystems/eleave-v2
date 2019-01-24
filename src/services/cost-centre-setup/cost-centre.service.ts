@@ -3,7 +3,7 @@ import { APIService } from '../api.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CostCentreModel } from 'src/models/main/cost-centre.model';
-import { AlertController } from '@ionic/angular';
+import { AlertService } from '../alert.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,7 @@ export class CostCentreService {
     private _costCentreData: BehaviorSubject<CostCentreModel[]> = new BehaviorSubject([]);
     public readonly costCentreData: Observable<CostCentreModel[]> = this._costCentreData.asObservable();
 
-    constructor(private _apiService: APIService, private _alertCtrl: AlertController) {}
+    constructor(private _apiService: APIService, private _alertCtrl: AlertService) {}
 
     public getCostCentreList() {
         return this._apiService.getApiModel('main_cost_centre', 'filter=DEL_FLAG=0')
@@ -39,27 +39,8 @@ export class CostCentreService {
                 return data;
             }))
             .subscribe(data => {
-                this.showAlert(data, costcentreId);
-            });
-
-    }
-
-    private async showAlert(data: any, id: string) {
-        const alert = await this._alertCtrl.create({
-            header: 'Remove Confirmation!',
-            message: 'Are you sure to remove?',
-            buttons: [
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-                handler: (blah) => {
-                }
-              }, {
-                text: 'OK',
-                handler: () => {
-
-                    return this._apiService.update(JSON.stringify(data), 'main_cost_centre')
+                this._alertCtrl.showAlert().then((res) => {
+                    this._apiService.update(JSON.stringify(data), 'main_cost_centre')
                     .subscribe((response) => {
 
                         if (response.status === 200) {
@@ -67,12 +48,10 @@ export class CostCentreService {
                            this.getCostCentreList().subscribe();
                         }
                     });
-                }
-              }
-            ]
-          });
+                },
+                err => {});
+            });
 
-          alert.present();
     }
 
 }

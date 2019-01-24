@@ -10,10 +10,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpModule } from '@angular/http';
 
-import { ReactiveFormsModule } from '@angular/forms';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { XmlJson } from 'src/services/xml-json.service';
+import { AlertService } from 'src/services/alert.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +28,7 @@ import { XmlJson } from 'src/services/xml-json.service';
     StatusBar,
     SplashScreen,
     XmlJson,
+    AlertService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

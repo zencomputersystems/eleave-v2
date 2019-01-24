@@ -2,8 +2,8 @@ import { map } from 'rxjs/operators';
 import { APIService } from '../api.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AlertController } from '@ionic/angular';
 import { BranchModel } from 'src/models/main/branch.model';
+import { AlertService } from '../alert.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,7 @@ export class BranchService {
     private _branchData: BehaviorSubject<BranchModel[]> = new BehaviorSubject([]);
     public readonly branchData: Observable<BranchModel[]> = this._branchData.asObservable();
 
-    constructor(private _apiService: APIService, private _alertCtrl: AlertController) {}
+    constructor(private _apiService: APIService, private _alertCtrl: AlertService) {}
 
     public getBranchList() {
         return this._apiService.getApiModel('main_branch', 'filter=ACTIVE_FLAG=1')
@@ -38,27 +38,8 @@ export class BranchService {
                 return data;
             }))
             .subscribe(data => {
-                this.showAlert(data, branchId);
-            });
-
-    }
-
-    private async showAlert(data: any, id: string) {
-        const alert = await this._alertCtrl.create({
-            header: 'Remove Confirmation!',
-            message: 'Are you sure to remove?',
-            buttons: [
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-                handler: (blah) => {
-                }
-              }, {
-                text: 'OK',
-                handler: () => {
-
-                    return this._apiService.update(JSON.stringify(data), 'main_branch')
+                this._alertCtrl.showAlert().then((res) => {
+                    this._apiService.update(JSON.stringify(data), 'main_branch')
                     .subscribe((response) => {
 
                         if (response.status === 200) {
@@ -66,11 +47,10 @@ export class BranchService {
                            this.getBranchList().subscribe();
                         }
                     });
-                }
-              }
-            ]
-          });
+                },
+                err => {});
 
-          alert.present();
+            });
+
     }
 }

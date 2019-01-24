@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { APIService } from '../api.service';
 import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AlertController } from '@ionic/angular';
 import { LeaveTypeModel } from 'src/models/leavetype.model';
 import { ViewLeaveTypeSetupModel } from 'src/models/view-leavetype-setup.model';
+import { AlertService } from '../alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class LeaveTypeService {
 
     constructor(
         private _apiService: APIService,
-        private _alertCtrl: AlertController) {}
+        private _alertCtrl: AlertService) {}
 
     // load the master leave type list from db
     public getLeaveTypeData() {
@@ -50,35 +50,14 @@ export class LeaveTypeService {
         // get the leave data
         this._apiService.getApiModel('l_leavetype_entitlement_def', 'filter=ENTITLEMENT_GUID=' + entitlementid)
             .pipe(map(data => {
-
                 // set the ACTIVE_FLAG to 0
                 data['resource'][0].ACTIVE_FLAG = 0;
 
                 return data;
             }))
             .subscribe(data => {
-                this.showAlert(data, leaveid, entitlementid);
-            });
-
-    }
-
-    private async showAlert(data: any, leaveid: string, entitlementid: string) {
-
-        const alert = await this._alertCtrl.create({
-            header: 'Remove Confirmation!',
-            message: 'Are you sure to remove?',
-            buttons: [
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-                handler: (blah) => {
-                }
-              }, {
-                text: 'OK',
-                handler: () => {
-
-                    this._apiService.update(JSON.stringify({ resource: [data] }), 'l_leavetype_entitlement_def')
+                this._alertCtrl.showAlert().then((res) => {
+                    this._apiService.update(JSON.stringify({ data }), 'l_leavetype_entitlement_def')
                     .subscribe((response) => {
 
                         if (response.status === 200) {
@@ -86,12 +65,9 @@ export class LeaveTypeService {
                            this.getLeaveTypeData().subscribe();
                         }
                     });
-                }
-              }
-            ]
-          });
+                },
+                err => {});
+            });
 
-          alert.present();
     }
-
 }
