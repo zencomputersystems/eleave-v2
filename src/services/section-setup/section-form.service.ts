@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { APIService } from '../api.service';
+import { APIService } from '../shared-service/api.service';
 import { Injectable } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';

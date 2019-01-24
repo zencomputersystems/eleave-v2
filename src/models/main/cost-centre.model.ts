@@ -1,13 +1,15 @@
 export class CostCentreModel {
 
-    public COST_CENTRE_GUID: string = null;
-    public NAME: string = null;
-    public CREATION_TS: string = null;
-    public CREATION_USER_GUID: string = null;
-    public UPDATE_TS: string = new Date().toISOString();
-    public UPDATE_USER_GUID: string = null;
-    public TENANT_GUID: string = null;
-    public DEL_FLAG = 0;
+    COST_CENTRE_GUID: string;
+    CREATION_TS: string;
+    CREATION_USER_GUID: string;
+    UPDATE_TS: string = new Date().toISOString();
+    UPDATE_USER_GUID: string;
+    TENANT_GUID: string;
+    DEL_FLAG = 0;
+    NAME: string;
 
-    construct() {}
+    construct() {
+
+    }
 }

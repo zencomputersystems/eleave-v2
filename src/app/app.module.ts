@@ -11,8 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpModule } from '@angular/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { XmlJson } from 'src/services/xml-json.service';
-import { AlertService } from 'src/services/alert.service';
+import { XmlJson } from 'src/services/shared-service/xml-json.service';
+import { AlertService } from 'src/services/shared-service/alert.service';
 
 @NgModule({
   declarations: [AppComponent],

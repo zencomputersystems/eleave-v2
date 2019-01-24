@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
-import * as constants from '../config/constant';
+import * as constants from '../../config/constant';
 import { Observable } from 'rxjs';
 import { map} from 'rxjs/operators';
 

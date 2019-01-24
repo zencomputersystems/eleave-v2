@@ -3,22 +3,24 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { BranchFormService } from 'src/services/branch-setup/branch-form.service';
+import { CheckEdit } from 'src/services/shared-service/checkEdit.service';
 
 @Component({
   selector: 'app-branch-setup-form',
   templateUrl: './branch-setup-form.page.html',
   styleUrls: ['./branch-setup-form.page.scss'],
-  providers: [BranchFormService]
+  providers: [BranchFormService, CheckEdit]
 })
 export class BranchSetupFormPage implements OnInit {
 
-  editMode = false;
-  subscription: Subscription;
+    editMode = false;
+    subscription: Subscription;
 
   constructor(
     private _activatedRouter: ActivatedRoute,
     private _router: Router,
-    private _branchFormService: BranchFormService
+    private _branchFormService: BranchFormService,
+    private _checkEdit: CheckEdit
     ) { }
 
   get form(): FormGroup {
@@ -28,14 +30,12 @@ export class BranchSetupFormPage implements OnInit {
   ngOnInit() {
     const id = this._activatedRouter.snapshot.paramMap.get('id');
 
-        // check if we in edit or add mode
-        if (id != null && id !== '') {
+    if (this._checkEdit.checkMode(id)) {
+        this.editMode = true;
+        // load the data from db
+        this._branchFormService.loadDataForEdit(id);
+    }
 
-            this.editMode = true;
-
-            // load the data from db
-            this._branchFormService.loadDataForEdit(id);
-        }
   }
 
   onSubmit() {

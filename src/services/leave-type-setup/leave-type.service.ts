@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { APIService } from '../api.service';
+import { APIService } from '../shared-service/api.service';
 import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LeaveTypeModel } from 'src/models/leavetype.model';
 import { ViewLeaveTypeSetupModel } from 'src/models/view-leavetype-setup.model';
-import { AlertService } from '../alert.service';
+import { AlertService } from '../shared-service/alert.service';
 
 @Injectable({
   providedIn: 'root'
