@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LeaveTypeService } from 'src/services/leave-type.service';
+import { LeaveTypeService } from 'src/services/leave-type-setup/leave-type.service';
 
 @Component({
   selector: 'app-leave-type-setup',

@@ -16,6 +16,11 @@ export class AppComponent {
       icon: 'home'
     },
     {
+      title: 'Cost Centre',
+      url: '/cost-centre-setup',
+      icon: 'list'
+    },
+    {
       title: 'Leave Type',
       url: '/leave-type-setup',
       icon: 'list'

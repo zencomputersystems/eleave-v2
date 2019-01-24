@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
-import { LeaveTypeFormService } from 'src/services/leave-type-form.service';
+import { LeaveTypeFormService } from 'src/services/leave-type-setup/leave-type-form.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 

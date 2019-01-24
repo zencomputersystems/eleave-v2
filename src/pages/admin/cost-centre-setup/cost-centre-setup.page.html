@@ -4,38 +4,38 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Leave Type
+      Cost Centre Setup
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
+  <ion-row>
+    <ion-item>
+      <button type="button" mat-flat-button color="primary"><a [routerLink]="['/cost-centre-setup-edit']">Add</a></button>
+    </ion-item>
+  </ion-row>
     <div class="example-container">
-        <div *ngFor="let item of leaves | async">
           <div class="leave-table" style="margin-bottom:5em;">
-            <p>{{item.leave_type}}</p>
-             <a [routerLink]="['/leave-type-edit',{lid:item.leave_id}]">Add</a>
-            <table mat-table [dataSource]="item.leave_entitlement" class="mat-elevation-z8">
+            <table mat-table [dataSource]="costCentreList | async" class="mat-elevation-z8">
 
-              <ng-container matColumnDef="LEAVE_ENTITLEMENT_CODE">
-                <th mat-header-cell *matHeaderCellDef>Entitlement Name </th>
+              <ng-container matColumnDef="COST_CENTRE_NAME">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let element">
-                  {{element.LEAVE_ENTITLEMENT_CODE}}
-                  <p><sub>{{element.DESCRIPTION}}</sub></p>
-
+                  {{element.NAME}}
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="Edit">
+              <ng-container matColumnDef="Option">
                 <th mat-header-cell *matHeaderCellDef> Option </th>
                 <td style="width:10%;" mat-cell *matCellDef="let element">
                   <ion-row>
-                    <ion-item [routerLink]="['/leave-type-edit',{id:element.ENTITLEMENT_GUID}]">
+                    <ion-item [routerLink]="['/cost-centre-setup-edit',{id:element.COST_CENTRE_GUID}]">
                       <ion-icon name="md-clipboard"></ion-icon>
                     </ion-item>
 
-                    <ion-item (click)='onDeleteLeave(item.leave_id,element.ENTITLEMENT_GUID)'>
+                    <ion-item (click)='onDeleteCostCentre(element.COST_CENTRE_GUID)'>
                       <ion-icon color=danger name="md-trash"></ion-icon>
                     </ion-item>
                   </ion-row>
@@ -47,7 +47,6 @@
             
             </table>
           </div>
-        </div>
     </div>
 
 </ion-content>

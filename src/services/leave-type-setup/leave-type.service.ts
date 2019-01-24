@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { APIService } from './api.service';
+import { APIService } from '../api.service';
 import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
@@ -77,7 +77,8 @@ export class LeaveTypeService {
               }, {
                 text: 'OK',
                 handler: () => {
-                    this._apiService.update(data, 'l_leavetype_entitlement_def')
+
+                    this._apiService.update(JSON.stringify({ resource: [data] }), 'l_leavetype_entitlement_def')
                     .subscribe((response) => {
 
                         if (response.status === 200) {
