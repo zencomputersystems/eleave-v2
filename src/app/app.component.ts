@@ -26,6 +26,11 @@ export class AppComponent {
       icon: 'list'
     },
     {
+      title: 'Section Setup',
+      url: '/section-setup',
+      icon: 'list'
+    },
+    {
       title: 'Leave Type Setup',
       url: '/leave-type-setup',
       icon: 'list'
