@@ -41,17 +41,12 @@ export class SectionService {
                 return data;
             }))
             .subscribe(data => {
-                this._alertCtrl.showAlert().then((res) => {
-                    this._apiService.update(JSON.stringify(data), 'main_section')
-                    .subscribe((response) => {
-
-                        if (response.status === 200) {
-                           // reload the data from db
-                           this.getSectionList().subscribe();
-                        }
-                    });
-                },
-                err => {});
+                const updateCall = this._apiService.update(JSON.stringify(data), 'main_section');
+                this._alertCtrl.showRemoveAlert(updateCall)
+                    .then((res) => {
+                        this.getSectionList().subscribe();
+                    },
+                    err => {});
 
             });
     }

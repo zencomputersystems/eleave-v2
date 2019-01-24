@@ -1,5 +1,6 @@
 import { AlertController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +10,7 @@ export class AlertService {
 
     }
 
-    public showAlert() {
+    public showRemoveAlert(d: Observable<any>) {
 
         return new Promise((resolve, reject) => {
             const alert = this._alertCtrl.create({
@@ -26,7 +27,15 @@ export class AlertService {
                   }, {
                     text: 'OK',
                     handler: () => {
-                        resolve(true);
+                        d.subscribe((response) => {
+
+                            if (response.status === 200) {
+                               // reload the data from db
+                               resolve(true);
+                            } else {
+                                reject(false);
+                            }
+                        });
                     }
                   }
                 ]

@@ -56,15 +56,9 @@ export class LeaveTypeService {
                 return data;
             }))
             .subscribe(data => {
-                this._alertCtrl.showAlert().then((res) => {
-                    this._apiService.update(JSON.stringify({ data }), 'l_leavetype_entitlement_def')
-                    .subscribe((response) => {
-
-                        if (response.status === 200) {
-                           // reload the data from db
-                           this.getLeaveTypeData().subscribe();
-                        }
-                    });
+                const updateData =  this._apiService.update(JSON.stringify({ data }), 'l_leavetype_entitlement_def');
+                this._alertCtrl.showRemoveAlert(updateData).then((res) => {
+                    this.getLeaveTypeData().subscribe();
                 },
                 err => {});
             });

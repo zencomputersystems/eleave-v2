@@ -39,15 +39,9 @@ export class CostCentreService {
                 return data;
             }))
             .subscribe(data => {
-                this._alertCtrl.showAlert().then((res) => {
-                    this._apiService.update(JSON.stringify(data), 'main_cost_centre')
-                    .subscribe((response) => {
-
-                        if (response.status === 200) {
-                           // reload the data from db
-                           this.getCostCentreList().subscribe();
-                        }
-                    });
+                const updateData = this._apiService.update(JSON.stringify(data), 'main_cost_centre');
+                this._alertCtrl.showRemoveAlert(updateData).then((res) => {
+                    this.getCostCentreList().subscribe();
                 },
                 err => {});
             });
