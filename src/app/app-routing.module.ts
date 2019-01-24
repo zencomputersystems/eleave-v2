@@ -25,7 +25,13 @@ const routes: Routes = [
   {
     path: 'cost-centre-setup-edit',
     loadChildren: '../pages/admin/cost-centre-setup/form/cost-centre-setup-form.module#CostCentreSetupFormPageModule'
-  }
+  },
+  {
+    path: 'branch-setup',
+    loadChildren: '../pages/admin/branch-setup/branch-setup.module#BranchSetupPageModule' },
+  {
+    path: 'branch-setup-edit',
+    loadChildren: '../pages/admin/branch-setup/form/branch-setup-form.module#BranchSetupFormPageModule' }
 ];
 
 @NgModule({

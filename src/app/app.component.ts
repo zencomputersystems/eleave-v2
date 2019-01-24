@@ -16,12 +16,17 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'Cost Centre',
+      title: 'Cost Centre Setup',
       url: '/cost-centre-setup',
       icon: 'list'
     },
     {
-      title: 'Leave Type',
+      title: 'Branch Setup',
+      url: '/branch-setup',
+      icon: 'list'
+    },
+    {
+      title: 'Leave Type Setup',
       url: '/leave-type-setup',
       icon: 'list'
     }

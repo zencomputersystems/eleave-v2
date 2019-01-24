@@ -19,7 +19,6 @@ import { XmlJson } from 'src/services/xml-json.service';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
