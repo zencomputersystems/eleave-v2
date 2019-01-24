@@ -3,12 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CostCentreFormService } from 'src/services/cost-centre-setup/cost-centre-form.service';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CheckEdit } from 'src/services/shared-service/checkEdit.service';
 
 @Component({
   selector: 'app-cost-centre-setup-form',
   templateUrl: './cost-centre-setup-form.page.html',
   styleUrls: ['./cost-centre-setup-form.page.scss'],
-  providers: [CostCentreFormService]
+  providers: [CostCentreFormService, CheckEdit]
 })
 export class CostCentreSetupFormPage implements OnInit {
 
@@ -18,7 +19,8 @@ export class CostCentreSetupFormPage implements OnInit {
   constructor(
     private _activatedRouter: ActivatedRoute,
     private _router: Router,
-    private _costCentreFormService: CostCentreFormService
+    private _costCentreFormService: CostCentreFormService,
+    private _checkEdit: CheckEdit
     ) { }
 
   get form(): FormGroup {
@@ -28,14 +30,11 @@ export class CostCentreSetupFormPage implements OnInit {
   ngOnInit() {
     const id = this._activatedRouter.snapshot.paramMap.get('id');
 
-        // check if we in edit or add mode
-        if (id != null && id !== '') {
-
-            this.editMode = true;
-
-            // load the data from db
-            this._costCentreFormService.loadDataForEdit(id);
-        }
+    if (this._checkEdit.checkMode(id)) {
+        this.editMode = true;
+        // load the data from db
+        this._costCentreFormService.loadDataForEdit(id);
+    }
   }
 
   onSubmit() {

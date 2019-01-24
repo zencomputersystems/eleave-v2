@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BranchService } from 'src/services/branch-setup/branch.service';
+import { CheckEdit } from 'src/services/shared-service/checkEdit.service';
 
 @Component({
   selector: 'app-branch-setup',
@@ -12,7 +13,8 @@ export class BranchSetupPage implements OnInit {
   branchList: any;
   displayedColumns: string[] = ['BRANCH_NAME', 'Option'];
 
-  constructor(private _branchDataService: BranchService) { }
+  constructor(
+    private _branchDataService: BranchService) { }
 
   ngOnInit() {}
 
