@@ -1,7 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AlertService } from '../shared-service/alert.service';
 import { SectionModel } from 'src/models/main/section.model';
 import { CRUD } from '../base/crud.service';
 
@@ -14,7 +13,6 @@ export class SectionService extends CRUD {
     public readonly sectionData: Observable<SectionModel[]> = this._sectionData.asObservable();
 
     constructor(
-        private _alertCtrl: AlertService,
         injector: Injector) {
             super(injector);
         }
@@ -43,13 +41,7 @@ export class SectionService extends CRUD {
                 return data;
             }))
             .subscribe(data => {
-                const updateCall = this.update('main_section', data['resource']);
-                this._alertCtrl.showRemoveAlert(updateCall)
-                    .then((res) => {
-                        this.getSectionList().subscribe();
-                    },
-                    err => {});
-
+                this.delete(data['resource'], 'main_section', this.getSectionList());
             });
     }
 }

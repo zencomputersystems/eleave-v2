@@ -2,7 +2,6 @@ import { map } from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BranchModel } from 'src/models/main/branch.model';
-import { AlertService } from '../shared-service/alert.service';
 import { CRUD } from '../base/crud.service';
 
 @Injectable({
@@ -13,7 +12,6 @@ export class BranchService extends CRUD {
     public readonly branchData: Observable<BranchModel[]> = this._branchData.asObservable();
 
     constructor(
-        private _alertCtrl: AlertService,
         injector: Injector) {
             super(injector);
         }
@@ -42,12 +40,7 @@ export class BranchService extends CRUD {
                 return data;
             }))
             .subscribe(data => {
-                const updateData = this.update('main_branch', data['resource']);
-                this._alertCtrl.showRemoveAlert(updateData).then((res) => {
-                    this.getBranchList().subscribe();
-                },
-                err => {});
-
+                this.delete(data['resource'], 'main_branch', this.getBranchList());
             });
 
     }

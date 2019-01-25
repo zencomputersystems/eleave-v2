@@ -3,7 +3,6 @@ import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LeaveTypeModel } from 'src/models/leavetype.model';
 import { ViewLeaveTypeSetupModel } from 'src/models/view-leavetype-setup.model';
-import { AlertService } from '../shared-service/alert.service';
 import { CRUD } from '../base/crud.service';
 
 @Injectable({
@@ -15,7 +14,6 @@ export class LeaveTypeService extends CRUD {
     public readonly leaveData: Observable<LeaveTypeModel[]> = this._leaveData.asObservable();
 
     constructor(
-        private _alertCtrl: AlertService,
         injector: Injector) {
             super(injector);
         }
@@ -58,11 +56,7 @@ export class LeaveTypeService extends CRUD {
                 return data;
             }))
             .subscribe(data => {
-                const updateData =  this.update('l_leavetype_entitlement_def', data['resource']);
-                this._alertCtrl.showRemoveAlert(updateData).then((res) => {
-                    this.getLeaveTypeData().subscribe();
-                },
-                err => {});
+                this.delete(data['resource'], 'l_leavetype_entitlement_def', this.getLeaveTypeData());
             });
 
     }

@@ -2,7 +2,6 @@ import { map } from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CostCentreModel } from 'src/models/main/cost-centre.model';
-import { AlertService } from '../shared-service/alert.service';
 import { CRUD } from '../base/crud.service';
 
 @Injectable({
@@ -14,7 +13,6 @@ export class CostCentreService extends CRUD {
     public readonly costCentreData: Observable<CostCentreModel[]> = this._costCentreData.asObservable();
 
     constructor(
-        private _alertCtrl: AlertService,
         injector: Injector) {
             super(injector);
         }
@@ -43,11 +41,7 @@ export class CostCentreService extends CRUD {
                 return data;
             }))
             .subscribe(data => {
-                const updateData = this.update('main_cost_centre', data['resource']);
-                this._alertCtrl.showRemoveAlert(updateData).then((res) => {
-                    this.getCostCentreList().subscribe();
-                },
-                err => {});
+                this.delete(data['resource'], 'main_cost_centre', this.getCostCentreList());
             });
 
     }

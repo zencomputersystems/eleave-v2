@@ -28,7 +28,6 @@ export class AlertService {
                     text: 'OK',
                     handler: () => {
                         d.subscribe((response) => {
-
                             if (response.status === 200) {
                                // reload the data from db
                                resolve(true);
