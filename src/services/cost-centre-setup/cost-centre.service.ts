@@ -1,22 +1,26 @@
 import { map } from 'rxjs/operators';
-import { APIService } from '../shared-service/api.service';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CostCentreModel } from 'src/models/main/cost-centre.model';
 import { AlertService } from '../shared-service/alert.service';
+import { CRUD } from '../base/crud.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CostCentreService {
+export class CostCentreService extends CRUD {
 
     private _costCentreData: BehaviorSubject<CostCentreModel[]> = new BehaviorSubject([]);
     public readonly costCentreData: Observable<CostCentreModel[]> = this._costCentreData.asObservable();
 
-    constructor(private _apiService: APIService, private _alertCtrl: AlertService) {}
+    constructor(
+        private _alertCtrl: AlertService,
+        injector: Injector) {
+            super(injector);
+        }
 
     public getCostCentreList() {
-        return this._apiService.getApiModel('main_cost_centre', 'filter=DEL_FLAG=0')
+        return this.read('main_cost_centre', 'filter=DEL_FLAG=0')
                 .pipe(map(data => {
                     let costCentreData = new Array<CostCentreModel>();
                     costCentreData = data['resource'];
@@ -30,7 +34,7 @@ export class CostCentreService {
     public removeCostCentre(costcentreId: string) {
 
         // get the leave data
-        this._apiService.getApiModel('main_cost_centre', 'filter=COST_CENTRE_GUID=' + costcentreId)
+        this.read('main_cost_centre', 'filter=COST_CENTRE_GUID=' + costcentreId)
             .pipe(map(data => {
 
                 // set the ACTIVE_FLAG to 0
@@ -39,7 +43,7 @@ export class CostCentreService {
                 return data;
             }))
             .subscribe(data => {
-                const updateData = this._apiService.update(JSON.stringify(data), 'main_cost_centre');
+                const updateData = this.update('main_cost_centre', data['resource']);
                 this._alertCtrl.showRemoveAlert(updateData).then((res) => {
                     this.getCostCentreList().subscribe();
                 },

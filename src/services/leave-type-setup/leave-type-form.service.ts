@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { APIService } from '../shared-service/api.service';
 import { map, switchMap } from 'rxjs/operators';
 import { LoadingController} from '@ionic/angular';
 import { LeaveTypeEntitlementModel } from 'src/models/leavetype-entitlement.model';
 import { XmlJson } from '../shared-service/xml-json.service';
 import { UUID } from 'angular2-uuid';
+import { CRUD } from '../base/crud.service';
 
 const convert = require('xmljson');
 
 @Injectable({
   providedIn: 'root'
 })
-export class LeaveTypeFormService {
+export class LeaveTypeFormService extends CRUD {
 
   public form: FormGroup;
   public formArray: FormArray;
@@ -24,9 +24,11 @@ export class LeaveTypeFormService {
 
   constructor(
     private _fb: FormBuilder,
-    private _apiService: APIService,
     public loadingCtrl: LoadingController,
-    private _jsonXml: XmlJson) {
+    private _jsonXml: XmlJson,
+    injector: Injector) {
+
+    super(injector);
 
     // form definition
     this.form = this._fb.group({
@@ -132,7 +134,7 @@ export class LeaveTypeFormService {
 
   // load the entitlement detail
   private getLeaveEntitlementData(id: string) {
-    return this._apiService.getApiModel('view_leave_type_setup', 'filter=ENTITLEMENT_GUID=' + id)
+    return this.read('view_leave_type_setup', 'filter=ENTITLEMENT_GUID=' + id)
                 .pipe(map(data => {
                     return data['resource'];
                 })
@@ -144,10 +146,6 @@ export class LeaveTypeFormService {
     return this.formData
         .pipe(
             map(data => {
-                const currentTimeStamp = new Date().toISOString();
-
-                // update the timestamp
-                data.UPDATE_TS = currentTimeStamp;
 
                 data.DESCRIPTION = this.form.value.description;
                 data.CODE = this.form.value.name;
@@ -155,12 +153,12 @@ export class LeaveTypeFormService {
                 // convert the json data to xml
                 data.PROPERTIES_XML = this._jsonXml.JsonToXml(this.form.value);
 
-                return JSON.stringify({ resource: [data] });
+                return data;
 
             })
         ).pipe(switchMap((data) => {
 
-            return this._apiService.update(data, 'l_leavetype_entitlement_def');
+            return this.update('l_leavetype_entitlement_def', data);
         })
         );
   }
@@ -171,7 +169,7 @@ export class LeaveTypeFormService {
 
   public loadDataForAdd(leaveid: string) {
 
-    this._apiService.getApiModel('l_main_leavetype', 'filter=ACTIVE_FLAG=1&&filter=LEAVE_TYPE_GUID=' + leaveid)
+    this.read('l_main_leavetype', 'filter=ACTIVE_FLAG=1&&filter=LEAVE_TYPE_GUID=' + leaveid)
       .subscribe(data => {
 
         const res = data['resource'][0];
@@ -194,12 +192,9 @@ export class LeaveTypeFormService {
     this.entitlementdata.LEAVE_TYPE_GUID = leaveid;
     this.entitlementdata.CODE = this.form.value.name;
     this.entitlementdata.DESCRIPTION = this.form.value.description;
-    this.entitlementdata.CREATION_TS = new Date().toISOString();
     this.entitlementdata.PROPERTIES_XML = this._jsonXml.JsonToXml(this.form.value);
 
-    const saveData = JSON.stringify({resource: [this.entitlementdata]});
-
-    return this._apiService.save(saveData, 'l_leavetype_entitlement_def');
+    return this.create('l_leavetype_entitlement_def', this.entitlementdata);
   }
 
   //#endregion

@@ -27,7 +27,7 @@ export class LeaveTypeSetupPage implements OnInit {
 
 
   onDeleteLeave(leaveid: string, entitlementid: string) {
-    this._data.removeLeaveType(leaveid, entitlementid);
+    this._data.removeLeaveType(entitlementid);
   }
 
 }

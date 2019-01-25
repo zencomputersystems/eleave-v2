@@ -1,27 +1,29 @@
-import { Injectable } from '@angular/core';
-import { APIService } from '../shared-service/api.service';
+import { Injectable, Injector } from '@angular/core';
 import { map} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LeaveTypeModel } from 'src/models/leavetype.model';
 import { ViewLeaveTypeSetupModel } from 'src/models/view-leavetype-setup.model';
 import { AlertService } from '../shared-service/alert.service';
+import { CRUD } from '../base/crud.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LeaveTypeService {
+export class LeaveTypeService extends CRUD {
 
     private _leaveData: BehaviorSubject<LeaveTypeModel[]> = new BehaviorSubject([]);
     public readonly leaveData: Observable<LeaveTypeModel[]> = this._leaveData.asObservable();
 
     constructor(
-        private _apiService: APIService,
-        private _alertCtrl: AlertService) {}
+        private _alertCtrl: AlertService,
+        injector: Injector) {
+            super(injector);
+        }
 
     // load the master leave type list from db
     public getLeaveTypeData() {
 
-        return this._apiService.getApiModel('view_leave_type_setup', 'filter=ACTIVE_FLAG=1')
+        return this.read('view_leave_type_setup', 'filter=ACTIVE_FLAG=1')
             .pipe(
                 map(data => {
                     const res: Array<ViewLeaveTypeSetupModel> = data['resource'];
@@ -45,10 +47,10 @@ export class LeaveTypeService {
             );
     }
 
-    public removeLeaveType(leaveid: string, entitlementid: string) {
+    public removeLeaveType(entitlementid: string) {
 
         // get the leave data
-        this._apiService.getApiModel('l_leavetype_entitlement_def', 'filter=ENTITLEMENT_GUID=' + entitlementid)
+        this.read('l_leavetype_entitlement_def', 'filter=ENTITLEMENT_GUID=' + entitlementid)
             .pipe(map(data => {
                 // set the ACTIVE_FLAG to 0
                 data['resource'][0].ACTIVE_FLAG = 0;
@@ -56,7 +58,7 @@ export class LeaveTypeService {
                 return data;
             }))
             .subscribe(data => {
-                const updateData =  this._apiService.update(JSON.stringify({ data }), 'l_leavetype_entitlement_def');
+                const updateData =  this.update('l_leavetype_entitlement_def', data['resource']);
                 this._alertCtrl.showRemoveAlert(updateData).then((res) => {
                     this.getLeaveTypeData().subscribe();
                 },

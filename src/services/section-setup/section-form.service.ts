@@ -1,22 +1,24 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { APIService } from '../shared-service/api.service';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { map } from 'rxjs/operators';
 import { SectionModel } from 'src/models/main/section.model';
+import { CRUD } from '../base/crud.service';
 
 // this class responsible to manage form action
 @Injectable({
     providedIn: 'root'
 })
-export class SectionFormService {
+export class SectionFormService extends CRUD {
     public form: FormGroup;
     sectionData: SectionModel;
 
     constructor(
         private _fb: FormBuilder,
-        private _apiService: APIService) {
+        injector: Injector) {
+
+        super(injector);
 
         this.form = this._fb.group({
             sectionName: ['', Validators.required]
@@ -28,15 +30,10 @@ export class SectionFormService {
         const sectionData = new SectionModel();
 
         sectionData.SECTION_GUID = UUID.UUID();
-        sectionData.CREATION_TS = new Date().toISOString();
         sectionData.NAME = this.form.value.sectionName;
-        sectionData.TENANT_GUID = '';
-        sectionData.CREATION_USER_GUID = '';
         sectionData.ACTIVE_FLAG = 1;
 
-        const saveData = JSON.stringify({resource: [sectionData]});
-
-        return this._apiService.save(saveData, 'main_section');
+        return this.create('main_section', sectionData);
     }
 
     //#endregion
@@ -52,7 +49,7 @@ export class SectionFormService {
     }
 
     public getSectionData(id: string) {
-        return this._apiService.getApiModel('main_section', 'filter=SECTION_GUID=' + id)
+        return this.read('main_section', 'filter=SECTION_GUID=' + id)
             .pipe(
                 map(data => {
                     this.sectionData = data['resource'][0];
@@ -67,7 +64,7 @@ export class SectionFormService {
         this.sectionData.NAME = this.form.value.sectionName;
         this.sectionData.UPDATE_TS = new Date().toISOString();
 
-        return this._apiService.update(JSON.stringify({ resource: [this.sectionData] }), 'main_section');
+        return this.update('main_section', this.sectionData);
     }
     //#endregion
 }
