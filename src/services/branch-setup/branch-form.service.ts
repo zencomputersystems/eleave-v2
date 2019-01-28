@@ -40,12 +40,17 @@ export class BranchFormService extends CRUD {
 
     //#region EDIT METHOD
     public loadDataForEdit(id: string) {
-        this.getBranchData(id)
-            .subscribe(data => {
-                this.form.patchValue({
-                    branchName: data.NAME
-                });
-            });
+        this.editMode.subscribe(editMode => {
+            if (editMode) {
+                this.getBranchData(id)
+                    .subscribe(data => {
+                        this.form.patchValue({
+                            branchName: data.NAME
+                        });
+                    });
+                }
+        });
+
     }
 
     public getBranchData(id: string) {

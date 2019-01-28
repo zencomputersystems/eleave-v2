@@ -12,8 +12,8 @@ import { SectionFormService } from 'src/services/section-setup/section-form.serv
 })
 export class SectionSetupFormPage implements OnInit {
 
-  editMode = false;
   subscription: Subscription;
+  checkModeSubscription: Subscription;
 
   constructor(
     private _activatedRouter: ActivatedRoute,
@@ -28,19 +28,15 @@ export class SectionSetupFormPage implements OnInit {
   ngOnInit() {
     const id = this._activatedRouter.snapshot.paramMap.get('id');
 
-        // check if we in edit or add mode
-        if (id != null && id !== '') {
-
-            this.editMode = true;
-
-            // load the data from db
-            this._sectionFormService.loadDataForEdit(id);
-        }
+    // set the form mode
+    this.checkModeSubscription = this._sectionFormService.checkEditMode(id).subscribe(() => {
+        this._sectionFormService.loadDataForEdit(id);
+    });
   }
 
   onSubmit() {
     let data: any;
-        if (this.editMode) {
+        if (this._sectionFormService.isEditMode) {
             // call the update method
             data = this._sectionFormService.updateSection();
         } else {
@@ -54,6 +50,10 @@ export class SectionSetupFormPage implements OnInit {
                 this._router.navigate(['/section-setup']);
             }
         });
+  }
+
+  ionViewWillLeave() {
+      this.checkModeSubscription.unsubscribe();
   }
 
 

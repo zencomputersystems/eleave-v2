@@ -40,12 +40,16 @@ export class SectionFormService extends CRUD {
 
     //#region EDIT METHOD
     public loadDataForEdit(id: string) {
-        this.getSectionData(id)
-            .subscribe(data => {
-                this.form.patchValue({
-                    sectionName: data.NAME
-                });
-            });
+        this.editMode.subscribe(editMode => {
+            if (editMode) {
+                this.getSectionData(id)
+                    .subscribe(data => {
+                        this.form.patchValue({
+                            sectionName: data.NAME
+                        });
+                    });
+            }
+        });
     }
 
     public getSectionData(id: string) {

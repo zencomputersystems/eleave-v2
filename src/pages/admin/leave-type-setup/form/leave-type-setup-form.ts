@@ -15,8 +15,8 @@ export class LeaveTypeSetupForm implements OnInit {
 
     // store the json data coming from xml
     jsonData: any;
-    editMode = false;
     subscription: Subscription;
+    checkModeSubscription: Subscription;
     leaveid: string;
 
     get form(): FormGroup {
@@ -33,26 +33,24 @@ export class LeaveTypeSetupForm implements OnInit {
     }
 
     ionViewWillEnter() {
+
         const id = this._activatedRouter.snapshot.paramMap.get('id');
         this.leaveid = this._activatedRouter.snapshot.paramMap.get('lid');
 
-        // check if we in edit or add mode
-        if (id != null && id !== '') {
-
-            this.editMode = true;
-
-            // load the data from db
-            this._leaveTypeFormService.loadDataForEdit(id);
-
-        } else {
-            this._leaveTypeFormService.loadDataForAdd(this.leaveid);
-        }
+        // set the form mode
+        this.checkModeSubscription = this._leaveTypeFormService.checkEditMode(id).subscribe((isEditMode) => {
+            if (isEditMode) {
+                this._leaveTypeFormService.loadDataForEdit(id);
+            } else {
+                this._leaveTypeFormService.loadDataForAdd(this.leaveid);
+            }
+        });
 
     }
 
     onSubmit() {
         let data: any;
-        if (this.editMode) {
+        if (this._leaveTypeFormService.isEditMode) {
             // call the update method
             data = this._leaveTypeFormService.updateLeaveEntitlementType();
         } else {
@@ -79,6 +77,7 @@ export class LeaveTypeSetupForm implements OnInit {
 
     ionViewWillLeave() {
         this.subscription.unsubscribe();
+        this.checkModeSubscription.unsubscribe();
     }
 
 }

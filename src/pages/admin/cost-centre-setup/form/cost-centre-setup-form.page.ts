@@ -3,24 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CostCentreFormService } from 'src/services/cost-centre-setup/cost-centre-form.service';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { CheckEdit } from 'src/services/shared-service/checkEdit.service';
 
 @Component({
   selector: 'app-cost-centre-setup-form',
   templateUrl: './cost-centre-setup-form.page.html',
   styleUrls: ['./cost-centre-setup-form.page.scss'],
-  providers: [CostCentreFormService, CheckEdit]
+  providers: [CostCentreFormService]
 })
 export class CostCentreSetupFormPage implements OnInit {
-
-  editMode = false;
   subscription: Subscription;
+  checkModeSubscription: Subscription;
 
   constructor(
     private _activatedRouter: ActivatedRoute,
     private _router: Router,
-    private _costCentreFormService: CostCentreFormService,
-    private _checkEdit: CheckEdit
+    private _costCentreFormService: CostCentreFormService
     ) { }
 
   get form(): FormGroup {
@@ -30,16 +27,15 @@ export class CostCentreSetupFormPage implements OnInit {
   ngOnInit() {
     const id = this._activatedRouter.snapshot.paramMap.get('id');
 
-    if (this._checkEdit.checkMode(id)) {
-        this.editMode = true;
-        // load the data from db
+    // set the form mode
+   this.checkModeSubscription = this._costCentreFormService.checkEditMode(id).subscribe(() => {
         this._costCentreFormService.loadDataForEdit(id);
-    }
+    });
   }
 
   onSubmit() {
     let data: any;
-        if (this.editMode) {
+        if (this._costCentreFormService.isEditMode) {
             // call the update method
             data = this._costCentreFormService.updateCostCentre();
         } else {
@@ -53,6 +49,10 @@ export class CostCentreSetupFormPage implements OnInit {
                 this._router.navigate(['/cost-centre-setup']);
             }
         });
+  }
+
+  ionViewWillLeave() {
+      this.checkModeSubscription.unsubscribe();
   }
 
 }

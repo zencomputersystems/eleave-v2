@@ -41,12 +41,16 @@ export class CostCentreFormService  extends CRUD {
 
     //#region EDIT METHOD
     public loadDataForEdit(id: string) {
-        this.getCostCentreData(id)
-            .subscribe(data => {
-                this.form.patchValue({
-                    costName: data.NAME
-                });
-            });
+        this.editMode.subscribe(editMode => {
+            if (editMode) {
+                this.getCostCentreData(id)
+                    .subscribe(data => {
+                        this.form.patchValue({
+                            costName: data.NAME
+                        });
+                    });
+            }
+        });
     }
 
     public getCostCentreData(id: string) {

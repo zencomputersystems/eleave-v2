@@ -1,9 +1,13 @@
 import { APIService } from '../shared-service/api.service';
 import {Injector} from '@angular/core';
 import { AlertService } from '../shared-service/alert.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 export class CRUD {
+
+    isEditMode = false;
+    private _editMode: BehaviorSubject<any> = new BehaviorSubject([]);
+    public readonly editMode: Observable<any> = this._editMode.asObservable();
 
     protected apiService: APIService;
     protected alertCtrl: AlertService;
@@ -11,6 +15,17 @@ export class CRUD {
     constructor(injector: Injector) {
         this.apiService = injector.get(APIService);
         this.alertCtrl = injector.get(AlertService);
+    }
+
+    public checkEditMode(id: string) {
+        if (id != null && id !== '') {
+            this.isEditMode = true;
+            this._editMode.next(true);
+        } else {
+            this._editMode.next(false);
+        }
+
+        return this.editMode;
     }
 
     public read (tableName: string, filter: string) {

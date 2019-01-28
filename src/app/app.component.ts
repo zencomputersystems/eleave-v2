@@ -34,6 +34,11 @@ export class AppComponent {
       title: 'Leave Type Setup',
       url: '/leave-type-setup',
       icon: 'list'
+    },
+    {
+      title: 'Userform',
+      url: '/user-setup',
+      icon: 'list'
     }
   ];
 

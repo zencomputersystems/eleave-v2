@@ -41,6 +41,14 @@ const routes: Routes = [
     path: 'section-setup-edit',
     loadChildren: '../pages/admin/section-setup/form/section-setup-form.module#SectionSetupFormPageModule'
   },
+  {
+    path: 'user-setup',
+    loadChildren: '../pages/admin/user-setup/user-setup.module#UserSetupPageModule'
+  },
+  {
+    path: 'user-setup-edit',
+    loadChildren: '../pages/admin/user-setup/form/user-setup-form.module#UserSetupFormPageModule'
+  },
 
 ];
 
