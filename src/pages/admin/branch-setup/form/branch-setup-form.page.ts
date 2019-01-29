@@ -48,7 +48,7 @@ export class BranchSetupFormPage implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         this.subscription = data.subscribe(data => {
             if (data.status === 200) {
-                this._router.navigate(['/branch-setup']);
+                this._router.navigate(['tabs/branch-setup']);
             }
         });
   }

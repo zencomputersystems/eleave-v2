@@ -61,7 +61,7 @@ export class LeaveTypeSetupForm implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         this.subscription = data.subscribe(data => {
             if (data.status === 200) {
-                this._router.navigate(['/leave-type-setup']);
+                this._router.navigate(['tabs/leave-type-setup']);
             }
         });
     }
