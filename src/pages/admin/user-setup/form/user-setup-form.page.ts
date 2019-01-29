@@ -30,7 +30,7 @@ export class UserSetupFormPage implements OnInit {
 
     // set the form mode
     this.checkModeSubscription = this._userFormService.checkEditMode(id).subscribe(() => {
-        this._userFormService.loadDataForEdit(id);
+        // this._userFormService.loadDataForEdit(id);
     });
   }
 

@@ -1,19 +1,18 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Cost Centre Setup
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        Cost Centre Setup
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content padding>
   <ion-row>
     <ion-item>
-      <button type="button" mat-flat-button color="primary" [routerLink]="['/cost-centre-setup-edit']">Add</button>
+      <button type="button" mat-flat-button color="primary" [routerLink]="['cost-centre-setup-edit']">Add</button>
     </ion-item>
   </ion-row>
     <div class="example-container">
@@ -31,7 +30,7 @@
                 <th mat-header-cell *matHeaderCellDef> Option </th>
                 <td style="width:10%;" mat-cell *matCellDef="let element">
                   <ion-row>
-                    <ion-item [routerLink]="['/cost-centre-setup-edit',{id:element.COST_CENTRE_GUID}]">
+                    <ion-item [routerLink]="['cost-centre-setup-edit',{id:element.COST_CENTRE_GUID}]">
                       <ion-icon name="md-clipboard"></ion-icon>
                     </ion-item>
 

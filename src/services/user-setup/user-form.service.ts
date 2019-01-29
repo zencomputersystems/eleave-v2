@@ -32,12 +32,56 @@ export class UserFormService extends CRUD {
 
         // initialize form
         this.form = this._fb.group({
-            personal_information: this._fb.group({
-                name: ['', Validators.required],
-                email: ['', Validators.required]
-            })
+            personal_information: this.loadPersonalInformationForm(),
+            education_information: this._fb.array([this.createEducation('', '', '', '')]),
+            spouse_information: this._fb.array([this.createSpouse('', '')]),
+            child_information: this._fb.array([this.createChild('', '', 1)])
         });
 
+    }
+
+    private loadPersonalInformationForm() {
+        return this._fb.group({
+            name: ['', Validators.required],
+            email: ['', Validators.required],
+            dob: ['', Validators.required],
+            contactNumber: ['', Validators.required],
+            companyNumber: ['', Validators.required],
+            gender: ['', Validators.required],
+            maritalStatus: ['', Validators.required],
+            address1: ['', Validators.required],
+            address2: ['', Validators.required],
+            city: ['', Validators.required],
+            postcode: ['', Validators.required],
+            state: ['', Validators.required],
+            country: ['', Validators.required]
+        });
+    }
+
+    // to create dynamic field
+    createEducation(qualification: string, major: string, university: string, year: string): FormGroup {
+        return this._fb.group({
+            qualification: [qualification, Validators.required],
+            major: [major, Validators.required],
+            univerity: [university, Validators.required],
+            year: [year, Validators.required]
+        });
+    }
+
+    createSpouse(name: string, identification: string) {
+        return this._fb.group({
+            spouseName: [name, Validators.required],
+            spouseIdentificationNumber: [identification, Validators.required]
+        });
+    }
+
+    createChild(name: string, identification: string, gender: number) {
+        return this._fb.group({
+            childName: [name, Validators.required],
+            childIdentificationNumber: [identification, Validators.required],
+            childGender: [gender, Validators.required]
+
+        });
     }
 
 
@@ -80,24 +124,6 @@ export class UserFormService extends CRUD {
 
     public updateUserData() {
 
-        return this.formData
-            .pipe(
-                map(data => {
-
-                    data.DESCRIPTION = this.form.value.description;
-                    data.CODE = this.form.value.name;
-
-                    // convert the json data to xml
-                    data.PROPERTIES_XML = this._jsonXml.JsonToXml(this.form.value);
-
-                    return data;
-
-                })
-            ).pipe(switchMap((data) => {
-
-                return this.update('l_leavetype_entitlement_def', data);
-            })
-            );
     }
 
     //#endregion

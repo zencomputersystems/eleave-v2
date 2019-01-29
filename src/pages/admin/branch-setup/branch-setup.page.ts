@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BranchService } from 'src/services/branch-setup/branch.service';
-import { CheckEdit } from 'src/services/shared-service/checkEdit.service';
 
 @Component({
   selector: 'app-branch-setup',

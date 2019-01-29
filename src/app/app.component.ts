@@ -16,23 +16,8 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'Cost Centre Setup',
-      url: '/cost-centre-setup',
-      icon: 'list'
-    },
-    {
-      title: 'Branch Setup',
-      url: '/branch-setup',
-      icon: 'list'
-    },
-    {
-      title: 'Section Setup',
-      url: '/section-setup',
-      icon: 'list'
-    },
-    {
-      title: 'Leave Type Setup',
-      url: '/leave-type-setup',
+      title: 'Master Setup',
+      url: '/tabs',
       icon: 'list'
     },
     {

@@ -6,16 +6,14 @@
       <ion-title>
         Branch Setup
       </ion-title>
+      <ion-buttons slot="end" [routerLink]="['branch-setup-edit']">
+          <ion-icon name="add" color="primary"></ion-icon>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
   
   
   <ion-content padding>
-    <ion-row>
-      <ion-item>
-        <button type="button" mat-flat-button color="primary" [routerLink]="['/branch-setup-edit']">Add</button>
-      </ion-item>
-    </ion-row>
       <div class="example-container">
             <div class="leave-table" style="margin-bottom:5em;">
               <table mat-table [dataSource]="branchList | async" class="mat-elevation-z8">
@@ -31,7 +29,7 @@
                   <th mat-header-cell *matHeaderCellDef> Option </th>
                   <td style="width:10%;" mat-cell *matCellDef="let element">
                     <ion-row>
-                      <ion-item [routerLink]="['/branch-setup-edit',{id:element.BRANCH_GUID}]">
+                      <ion-item [routerLink]="['branch-setup-edit',{id:element.BRANCH_GUID}]">
                         <ion-icon name="md-clipboard"></ion-icon>
                       </ion-item>
   

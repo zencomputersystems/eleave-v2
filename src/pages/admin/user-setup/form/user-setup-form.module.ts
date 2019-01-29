@@ -12,6 +12,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 const routes: Routes = [
   {
@@ -31,6 +33,8 @@ const routes: Routes = [
     MatButtonModule,
     MatRadioModule,
     MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ],

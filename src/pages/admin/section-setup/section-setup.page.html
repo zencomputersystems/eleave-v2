@@ -13,7 +13,7 @@
   <ion-content padding>
     <ion-row>
       <ion-item>
-        <button type="button" mat-flat-button color="primary" [routerLink]="['/section-setup-edit']">Add</button>
+        <button type="button" mat-flat-button color="primary" [routerLink]="['section-setup-edit']">Add</button>
       </ion-item>
     </ion-row>
       <div class="example-container">
@@ -31,7 +31,7 @@
                   <th mat-header-cell *matHeaderCellDef> Option </th>
                   <td style="width:10%;" mat-cell *matCellDef="let element">
                     <ion-row>
-                      <ion-item [routerLink]="['/section-setup-edit',{id:element.SECTION_GUID}]">
+                      <ion-item [routerLink]="['section-setup-edit',{id:element.SECTION_GUID}]">
                         <ion-icon name="md-clipboard"></ion-icon>
                       </ion-item>
   
